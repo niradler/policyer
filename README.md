@@ -15,7 +15,7 @@ touch index.js
 touch cli.js
 touch provider.js
 mkdir checks
-touch checks/todoCheck.yml # https://github.com/niradler/policyer-todo/checks/todoCheck.yml
+touch checks/todoCheck.yml # https://github.com/niradler/policyer-todo/blob/master/checks/todoCheck.yml
 ```
 
 ```js
