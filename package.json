@@ -1,0 +1,20 @@
+{
+  "name": "policyer",
+  "version": "0.0.2",
+  "description": "base for check system base on a configuration file",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "Nir Adler",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^26.6.3",
+    "node-fetch": "^2.6.1"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "yaml": "^1.10.2"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "configuration": {
+    "provider": "todo-provider",
+    "type": "resource",
+    "resource": "todo",
+    "payload": {
+      "id": 1
+    }
+  },
+  "checks": [
+    {
+      "id": "todo-id-check",
+      "name": "check if todo has an id.",
+      "severity": "High",
+      "steps": [
+        {
+          "path": "id",
+          "condition": "equal",
+          "utility": "isInteger",
+          "value": true
+        },
+        { "path": "id", "condition": "equal", "value": 1 }
+      ]
+    },
+    {
+      "id": "todo-title-check",
+      "name": "check if todo has a title.",
+      "severity": "Warning",
+      "steps": [
+        {
+          "path": "title",
+          "condition": "not",
+          "utility": "isEmpty",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": "todo-completed-check",
+      "name": "check if todo has a valid completed field.",
+      "severity": "Warning",
+      "steps": [
+        {
+          "path": "completed",
+          "condition": "includes",
+          "value": [true, false]
+        }
+      ]
+    }
+  ]
+}
