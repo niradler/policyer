@@ -1,5 +1,5 @@
 const fetch = require("node-fetch");
-const Provider = require("../../provider");
+const { Provider } = require("../../index");
 
 class TodoProvider extends Provider {
   constructor(name = "todo-provider") {

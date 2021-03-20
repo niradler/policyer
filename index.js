@@ -1,3 +1,4 @@
 module.exports = {
-  provider: require("./provider"),
+  Provider: require("./provider"),
+  Cli: require("./cli"),
 };

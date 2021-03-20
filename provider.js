@@ -1,9 +1,32 @@
 const _ = require("lodash");
+const fs = require("fs");
+const YAML = require("yaml");
 
 class Provider {
   constructor(name) {
     this.name = name;
     this.utilities = _;
+  }
+
+  static listChecks(path) {
+    if (fs.statSync(path).isDirectory()) return fs.readdirSync(path);
+
+    return [];
+  }
+
+  static readCheck(path) {
+    let check;
+    if (path.endsWith(".json")) {
+      const file = fs.readFileSync(path, "utf8");
+      check = JSON.parse(file);
+    } else if (path.endsWith(".yml") || path.endsWith(".yaml")) {
+      const file = fs.readFileSync(path, "utf8");
+      check = YAML.parse(file);
+    } else {
+      throw new Error("check extension is not valid. (json/yml/yaml)");
+    }
+
+    return check;
   }
 
   evaluate() {

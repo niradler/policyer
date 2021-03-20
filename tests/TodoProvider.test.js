@@ -1,10 +1,8 @@
-const fs = require("fs");
-const YAML = require("yaml");
 const TodoProvider = require("../examples/providers/TodoProvider");
 
 it("TodoProvider - evaluate example checks json.", async () => {
   try {
-    const checks = [require("../examples/checks/todoCheck.json")];
+    const checks = [TodoProvider.readCheck("examples/checks/todoCheck.json")];
     const provider = new TodoProvider();
     for (let i = 0; i < checks.length; i++) {
       const check = checks[i];
@@ -22,8 +20,7 @@ it("TodoProvider - evaluate example checks json.", async () => {
 
 it("TodoProvider - evaluate example checks yml.", async () => {
   try {
-    const file = fs.readFileSync("examples/checks/todoCheck.yml", "utf8");
-    const checks = [YAML.parse(file)];
+    const checks = [TodoProvider.readCheck("examples/checks/todoCheck.yml")];
     const provider = new TodoProvider();
     for (let i = 0; i < checks.length; i++) {
       const check = checks[i];

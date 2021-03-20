@@ -1,20 +1,29 @@
 {
   "name": "policyer",
-  "version": "0.0.2",
-  "description": "base for check system base on a configuration file",
+  "version": "0.0.4",
+  "description": "Create a check system in an extendable way, create a provider to feed the checks with data, checks can be written in json or yml format.",
   "main": "index.js",
+  "bin": {
+    "policyer": "examples/providers/cli.js"
+  },
   "scripts": {
     "test": "jest"
   },
-  "keywords": [],
+  "keywords": [
+    "policy",
+    "checks",
+    "tests",
+    "scanner"
+  ],
   "author": "Nir Adler",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "jest": "^26.6.3",
     "node-fetch": "^2.6.1"
   },
   "dependencies": {
     "lodash": "^4.17.21",
-    "yaml": "^1.10.2"
+    "yaml": "^1.10.2",
+    "yargs": "^16.2.0"
   }
 }
