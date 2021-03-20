@@ -89,6 +89,15 @@ module.exports = provider;
 node cli.js
 ```
 
-### policyer modules
+### policyer modules:
 
 - [policyer-todo](https://github.com/niradler/policyer-todo)
+
+#### TODO:
+
+- fail policy
+- or/and on steps
+- dependsOn (or/and ?)
+- regex path
+- jmespath path
+- complex example
