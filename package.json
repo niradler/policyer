@@ -1,6 +1,6 @@
 {
   "name": "policyer",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "description": "Create a check system in an extendable way, create a provider to feed the checks with data, checks can be written in json or yml format.",
   "main": "index.js",
   "bin": {
@@ -26,5 +26,16 @@
     "lodash": "^4.17.21",
     "yaml": "^1.10.2",
     "yargs": "^16.2.0"
-  }
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/niradler/policyer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/niradler/policyer/issues"
+  },
+  "homepage": "https://github.com/niradler/policyer#readme"
 }
