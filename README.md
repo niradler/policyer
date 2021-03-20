@@ -85,13 +85,6 @@ const provider = require("./provider");
 module.exports = provider;
 ```
 
-```js
-//index.js
-const provider = require("./provider");
-
-module.exports = provider;
-```
-
 ```sh
 node cli.js
 ```
