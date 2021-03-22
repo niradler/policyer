@@ -87,7 +87,7 @@ class Provider {
           finalValue,
           step.value
         );
-        console.log(check.id, value, finalValue, evaluation);
+
         return evaluation;
       });
 
