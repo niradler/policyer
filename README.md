@@ -6,7 +6,7 @@ Create a check system in an extendable way, create a provider to feed the checks
 
 ## Documentation
 
-- 
+- [Getting Started](https://github.com/niradler/policyer/blob/master/docs/GettingStarted.md)
 
 ### policyer modules:
 
