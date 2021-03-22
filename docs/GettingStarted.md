@@ -1,4 +1,4 @@
-## Getting Started
+# Getting Started
 
 ```sh
 mkdir policyer-todo

@@ -5,21 +5,23 @@ class Cli {
   constructor(Provider, options = {}) {
     this.Provider = Provider;
     this.options = options;
+    this.yargs = yargs;
   }
 
   run(onSuccess, onFail) {
-    return yargs(hideBin(process.argv))
+    return this.yargs(hideBin(process.argv))
       .command(
         this.options.command || "*",
         this.options.description || "Scan checks",
         (yargs) => {
           yargs.positional("path", {
-            alias:"p",
+            alias: "p",
             describe: "path",
             default: "./checks",
           });
           yargs.positional("internal", {
-            alias:"i",
+            alias: "i",
+            type: "boolean",
             describe: "use internal checks",
             default: true,
           });
