@@ -33,11 +33,11 @@ class Provider {
     throw new Error("Not implemented");
   }
 
-  evaluateUtility(utility, value) {
+  evaluateUtility(utility, value, utilityProps = []) {
     if (!utility) return value;
     if (!this.utilities[utility]) throw new Error("utility not found.");
 
-    return this.utilities[utility](value);
+    return this.utilities[utility](value, ...utilityProps);
   }
 
   evaluateCondition(condition, value, checkValue) {
@@ -49,7 +49,20 @@ class Provider {
         return value != checkValue;
 
       case "includes":
+        if (Array.isArray(value)) return value.includes(checkValue);
         return checkValue.includes(value);
+
+      case "gt":
+        return value > checkValue;
+
+      case "gte":
+        return value >= checkValue;
+
+      case "lt":
+        return value < checkValue;
+
+      case "lte":
+        return value < checkValue;
 
       default:
         throw new Error("Condition not found.");
@@ -64,13 +77,17 @@ class Provider {
       const stepsResults = check.steps.map((step) => {
         const value = _.get(data, step.path, undefined);
         inspectedValues.push(value);
-        const finalValue = this.evaluateUtility(step.utility, value);
+        const finalValue = this.evaluateUtility(
+          step.utility,
+          value,
+          step.utilityProps
+        );
         const evaluation = this.evaluateCondition(
           step.condition,
           finalValue,
           step.value
         );
-
+        console.log(check.id, value, finalValue, evaluation);
         return evaluation;
       });
 

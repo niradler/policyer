@@ -23,6 +23,20 @@
       ]
     },
     {
+      "id": "todo-userId-check",
+      "name": "check if todo has a userId.",
+      "severity": "High",
+      "steps": [
+        {
+          "path": "userId",
+          "condition": "equal",
+          "utility": "isInteger",
+          "value": true
+        },
+        { "path": "userId", "condition": "equal", "value": 1 }
+      ]
+    },
+    {
       "id": "todo-title-check",
       "name": "check if todo has a title.",
       "severity": "Warning",
@@ -32,6 +46,13 @@
           "condition": "not",
           "utility": "isEmpty",
           "value": true
+        },
+        {
+          "path": "title",
+          "condition": "gt",
+          "utility": "get",
+          "utilityProps": ["length"],
+          "value": 3
         }
       ]
     },

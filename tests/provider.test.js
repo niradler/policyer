@@ -50,6 +50,11 @@ it("Provider - evaluateChecks", () => {
   };
   const check = Provider.readCheck("checks/todoCheck.json");
   const report = provider.evaluateChecks(data, check.checks);
+
+  expect(report["todo-title-check"].check.severity).toBe("Warning");
+  expect(report["todo-title-check"].stepsResults.includes(false)).toBe(false);
+  expect(report["todo-title-check"].inspectedValues[0].length).toBe(18);
+
   expect(report["todo-completed-check"].check.severity).toBe("Warning");
   expect(report["todo-completed-check"].stepsResults.includes(false)).toBe(
     false

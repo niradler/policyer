@@ -14,14 +14,20 @@ class Cli {
         this.options.description || "Scan checks",
         (yargs) => {
           yargs.positional("path", {
+            alias:"p",
             describe: "path",
             default: "./checks",
+          });
+          yargs.positional("internal", {
+            alias:"i",
+            describe: "use internal checks",
+            default: true,
           });
         },
         async (argv) => {
           if (argv.verbose) console.log(argv);
           try {
-            const currentPath = process.cwd();
+            const currentPath = argv.internal ? __dirname : process.cwd();
             const checksFiles = this.Provider.listChecks(
               path.join(currentPath, argv.path)
             );
