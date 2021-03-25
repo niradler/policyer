@@ -14,12 +14,11 @@
       "severity": "High",
       "steps": [
         {
-          "path": "id",
-          "condition": "equal",
-          "utility": "isInteger",
-          "value": true
-        },
-        { "path": "id", "condition": "equal", "value": 1 }
+          "or": [
+            { "path": "id", "condition": "equal", "value": 2 },
+            { "path": "id", "condition": "equal", "value": 3 }
+          ]
+        }
       ]
     },
     {
@@ -42,7 +41,7 @@
       "severity": "Warning",
       "steps": [
         {
-          "or": [
+          "and": [
             {
               "path": "title",
               "condition": "not",
@@ -54,7 +53,7 @@
               "condition": "gt",
               "utility": "get",
               "utilityProps": ["length"],
-              "value": 3
+              "value": 20
             }
           ]
         }

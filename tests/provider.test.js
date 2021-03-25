@@ -53,7 +53,29 @@ it("Provider - evaluateChecks", () => {
 
   expect(report["todo-title-check"].check.severity).toBe("Warning");
   expect(report["todo-title-check"].stepsResults.includes(false)).toBe(false);
-  expect(report["todo-title-check"].inspectedValues[0].length).toBe(18);
+  expect(report["todo-title-check"].inspectedValues[0][0].length).toBe(18);
+
+  expect(report["todo-completed-check"].check.severity).toBe("Warning");
+  expect(report["todo-completed-check"].stepsResults.includes(false)).toBe(
+    false
+  );
+  expect(report["todo-completed-check"].inspectedValues[0]).toBe(false);
+});
+
+it("Provider - evaluateChecks - error", () => {
+  const provider = new Provider();
+  const data = {
+    userId: 1,
+    id: 1,
+    title: "delectus aut autem",
+    completed: false,
+  };
+  const check = Provider.readCheck("checks/todoCheckWithError.json");
+  const report = provider.evaluateChecks(data, check.checks);
+
+  expect(report["todo-title-check"].hasError).toBe(true);
+  expect(report["todo-title-check"].check.severity).toBe("Warning");
+  expect(report["todo-title-check"].stepsResults.includes(false)).toBe(true);
 
   expect(report["todo-completed-check"].check.severity).toBe("Warning");
   expect(report["todo-completed-check"].stepsResults.includes(false)).toBe(

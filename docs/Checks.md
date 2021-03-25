@@ -22,7 +22,7 @@ fields:
 - name : String - check name
 - severity : String - check severity
 - steps : Array - list of steps
-  
+
 ## steps
 
 the smallest unit of check.
@@ -34,6 +34,12 @@ fields:
 - utility : every [lodash](https://lodash.com/docs/) methods
 - utilityProps : Array - array of parameters to pass to the utility function
 - value : any - value to compare
+
+you can add condition for steps:
+
+fields:
+
+- [and/or] : Step[] - step condition
 
 ### Examples
 
@@ -73,7 +79,12 @@ fields:
           "utility": "isInteger",
           "value": true
         },
-        { "path": "userId", "condition": "equal", "value": 1 }
+        {
+          "or": [
+            { "path": "userId", "condition": "equal", "value": 1 },
+            { "path": "userId", "condition": "equal", "value": "1" }
+          ]
+        }
       ]
     },
     {
@@ -132,6 +143,21 @@ checks:
       - path: id
         condition: equal
         value: 1
+  - id: todo-userId-check
+    name: check if todo has a userId.
+    severity: High
+    steps:
+      - path: userId
+        condition: equal
+        utility: isInteger
+        value: true
+      - or:
+          - path: userId
+            condition: equal
+            value: 1
+          - path: userId
+            condition: equal
+            value: "1"
   - id: todo-title-check
     name: check if todo has a title.
     severity: Warning
@@ -140,6 +166,12 @@ checks:
         condition: not
         utility: isEmpty
         value: true
+      - path: title
+        condition: gt
+        utility: get
+        utilityProps:
+          - length
+        value: 3
   - id: todo-completed-check
     name: check if todo has a valid completed field.
     severity: Warning

@@ -40,6 +40,23 @@ class Provider {
     return this.utilities[utility](value, ...utilityProps);
   }
 
+  evaluateStep(data, step) {
+    const value = _.get(data, step.path, undefined);
+
+    const finalValue = this.evaluateUtility(
+      step.utility,
+      value,
+      step.utilityProps
+    );
+    const evaluation = this.evaluateCondition(
+      step.condition,
+      finalValue,
+      step.value
+    );
+
+    return { evaluation, value };
+  }
+
   evaluateCondition(condition, value, checkValue) {
     switch (condition) {
       case "equal":
@@ -75,23 +92,29 @@ class Provider {
       const check = checks[i];
       const inspectedValues = [];
       const stepsResults = check.steps.map((step) => {
-        const value = _.get(data, step.path, undefined);
+        const steps = step["and"] || step["or"];
+        if (steps) {
+          const stepsInspectedValues = [];
+          const evaluationValues = steps.map((step) => {
+            const { evaluation, value } = this.evaluateStep(data, step);
+            stepsInspectedValues.push(value);
+            return evaluation;
+          });
+          inspectedValues.push(stepsInspectedValues);
+
+          return step["and"]
+            ? !evaluationValues.includes(false)
+            : evaluationValues.includes(true);
+        }
+
+        const { evaluation, value } = this.evaluateStep(data, step);
         inspectedValues.push(value);
-        const finalValue = this.evaluateUtility(
-          step.utility,
-          value,
-          step.utilityProps
-        );
-        const evaluation = this.evaluateCondition(
-          step.condition,
-          finalValue,
-          step.value
-        );
 
         return evaluation;
       });
 
       report[check.id] = {
+        hasError: stepsResults.includes(false),
         check,
         stepsResults,
         inspectedValues,
