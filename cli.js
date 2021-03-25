@@ -1,5 +1,5 @@
 const path = require("path");
-const fs = require("path");
+const fs = require("fs");
 const yargs = require("yargs/yargs");
 const { hideBin } = require("yargs/helpers");
 class Cli {
