@@ -73,11 +73,14 @@ class Cli {
               if (argv.output) {
                 this.output(report, argv);
               }
-              onSuccess(report, argv);
+              if (onSuccess) onSuccess(report, argv);
+
+              process.exit(0);
             }
           } catch (error) {
             console.error("Error:", error.message);
-            onFail(error, argv);
+            if (onFail) onFail(error, argv);
+            process.exit(1);
           }
         }
       )
