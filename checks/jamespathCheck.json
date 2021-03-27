@@ -1,0 +1,46 @@
+{
+  "configuration": {
+    "provider": "todo-provider",
+    "type": "resource",
+    "resource": "todo",
+    "payload": {
+      "id": 1
+    }
+  },
+  "checks": [
+    {
+      "id": "todo-accounts-check",
+      "name": "check accounts.",
+      "severity": "High",
+      "parser": "jmespath",
+      "steps": [
+        {
+          "and": [
+            {
+              "path": "accounts[].name",
+              "condition": "gt",
+              "utility": "get",
+              "utilityProps": ["length"],
+              "value": 0
+            },
+            {
+              "path": "accounts[].name",
+              "condition": "equal",
+              "evaluationMethod": "map",
+              "utility": "isString",
+              "value": true
+            }
+          ]
+        },
+        {
+          "path": "accounts[].email",
+          "condition": "equal",
+          "evaluationMethod": "map",
+          "utility": "includes",
+          "utilityProps": ["@"],
+          "value": true
+        }
+      ]
+    }
+  ]
+}

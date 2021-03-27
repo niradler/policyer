@@ -1,4 +1,6 @@
 const Provider = require("../provider");
+const { setVerbose } = require("../helpers");
+setVerbose(false);
 
 it("Provider - parse json.", () => {
   const check = Provider.readCheck("checks/todoCheck.json");
@@ -12,8 +14,9 @@ it("Provider - parse yml.", () => {
 
 it("Provider - listChecks", () => {
   const checks = Provider.listChecks("checks");
-  expect(checks[0]).toBe("todoCheck.json");
-  expect(checks[1]).toBe("todoCheck.yml");
+  expect(checks[0]).toBe("jamespathCheck.json");
+  expect(checks[1]).toBe("todoCheck.json");
+  expect(checks[2]).toBe("todoCheck.yml");
 });
 
 it("Provider - evaluate", () => {
@@ -60,6 +63,23 @@ it("Provider - evaluateChecks", () => {
     false
   );
   expect(report["todo-completed-check"].inspectedValues[0]).toBe(false);
+});
+
+it("Provider - evaluateChecks - jamespath", () => {
+  const provider = new Provider();
+  const data = {
+    userId: 1,
+    id: 1,
+    accounts: [
+      { name: "one", id: 1, email: "one@policyer.com" },
+      { name: "two", id: 2, email: "two@policyer.com" },
+    ],
+    completed: false,
+  };
+  const check = Provider.readCheck("checks/jamespathCheck.json");
+  const report = provider.evaluateChecks(data, check.checks);
+
+  expect(report["todo-accounts-check"].hasError).toBe(false);
 });
 
 it("Provider - evaluateChecks - error", () => {

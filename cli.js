@@ -2,6 +2,8 @@ const path = require("path");
 const fs = require("fs");
 const yargs = require("yargs/yargs");
 const { hideBin } = require("yargs/helpers");
+const { logger, setVerbose } = require("./helpers");
+
 class Cli {
   constructor(Provider, options = {}, output) {
     this.Provider = Provider;
@@ -55,7 +57,8 @@ class Cli {
           });
         },
         async (argv) => {
-          if (argv.verbose) console.log(argv);
+          if (argv.verbose) setVerbose(argv.verbose);
+          logger(argv.verbose);
           try {
             const currentPath = this.getCurrentPath(argv);
             const checksFiles = this.Provider.listChecks(

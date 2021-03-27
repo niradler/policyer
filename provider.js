@@ -1,6 +1,8 @@
 const _ = require("lodash");
 const fs = require("fs");
 const YAML = require("yaml");
+const jmespath = require("jmespath");
+const { logger } = require("./helpers");
 
 class Provider {
   constructor(name) {
@@ -40,20 +42,68 @@ class Provider {
     return this.utilities[utility](value, ...utilityProps);
   }
 
-  evaluateStep(data, step) {
-    const value = _.get(data, step.path, undefined);
+  getPath(data, path, parser) {
+    let value;
+    switch (parser) {
+      case "jmespath":
+        value = jmespath.search(data, path);
+        break;
+      case "lodash":
+        value = _.get(data, path, undefined);
+        break;
+      default:
+        value = _.get(data, path, undefined);
+        break;
+    }
 
+    return value;
+  }
+
+  evaluateValue(value, step) {
+    logger({ value });
     const finalValue = this.evaluateUtility(
       step.utility,
       value,
       step.utilityProps
     );
+    logger({ finalValue });
     const evaluation = this.evaluateCondition(
       step.condition,
       finalValue,
       step.value
     );
+    logger({ evaluation });
+    return evaluation;
+  }
 
+  evaluateStep(data, step, check) {
+    const steps = step["and"] || step["or"];
+    if (steps) {
+      const evaluations = steps.map((step) =>
+        this.evaluateStep(data, step, check)
+      );
+
+      return evaluations;
+    }
+    let value;
+    if (step.evaluationMethod) {
+      let evaluations = [];
+
+      switch (step.evaluationMethod) {
+        case "map":
+          value = this.getPath(data, step.path, check.parser);
+          evaluations = value.map((value) => this.evaluateValue(value, step));
+          break;
+
+        default:
+          throw new Error("Unknown evaluationMethod");
+      }
+
+      return { evaluation: !evaluations.includes(false), value };
+    }
+
+    value = this.getPath(data, step.path, check.parser);
+    const evaluation = this.evaluateValue(value, step);
     return { evaluation, value };
   }
 
@@ -91,28 +141,29 @@ class Provider {
     for (let i = 0; i < checks.length; i++) {
       const check = checks[i];
       const inspectedValues = [];
-      const stepsResults = check.steps.map((step) => {
-        const steps = step["and"] || step["or"];
-        if (steps) {
-          const stepsInspectedValues = [];
-          const evaluationValues = steps.map((step) => {
-            const { evaluation, value } = this.evaluateStep(data, step);
-            stepsInspectedValues.push(value);
-            return evaluation;
+      const stepsResults = [];
+      check.steps.forEach((step) => {
+        const evaluations = this.evaluateStep(data, step, check);
+        if (Array.isArray(evaluations)) {
+          const evaluationArr = [];
+          const valuesArr = [];
+          evaluations.forEach((evaluations) => {
+            const { evaluation, value } = evaluations;
+            evaluationArr.push(evaluation);
+            valuesArr.push(value);
           });
-          inspectedValues.push(stepsInspectedValues);
-
-          return step["and"]
-            ? !evaluationValues.includes(false)
-            : evaluationValues.includes(true);
+          const finalEvaluation = step["and"]
+            ? !evaluationArr.includes(false)
+            : evaluationArr.includes(true);
+          stepsResults.push(finalEvaluation);
+          inspectedValues.push(valuesArr);
+        } else {
+          stepsResults.push(evaluations.evaluation);
+          inspectedValues.push(evaluations.value);
         }
-
-        const { evaluation, value } = this.evaluateStep(data, step);
-        inspectedValues.push(value);
-
-        return evaluation;
       });
 
+      logger(stepsResults, inspectedValues);
       report[check.id] = {
         hasError: stepsResults.includes(false),
         check,
@@ -120,6 +171,8 @@ class Provider {
         inspectedValues,
       };
     }
+
+    logger(JSON.stringify(report, null, 2));
 
     return report;
   }
