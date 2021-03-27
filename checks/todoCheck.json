@@ -3,6 +3,7 @@
     "provider": "todo-provider",
     "type": "resource",
     "resource": "todo",
+    "description": "check if todo is valid",
     "payload": {
       "id": 1
     }

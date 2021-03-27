@@ -18,11 +18,11 @@ class Cli {
     return currentPath;
   }
 
-  defaultOutput(report, argv) {
+  defaultOutput(reports, argv) {
     const currentPath = this.getCurrentPath(argv);
     fs.writeFileSync(
       path.join(currentPath, argv.output),
-      JSON.stringify(report)
+      JSON.stringify(reports)
     );
   }
 
@@ -55,6 +55,13 @@ class Cli {
             default: "json",
             choices: ["json"],
           });
+          yargs.positional("report", {
+            alias: "r",
+            type: "string",
+            describe: "report type",
+            default: "clean",
+            choices: ["clean", "details"],
+          });
         },
         async (argv) => {
           if (argv.verbose) setVerbose(argv.verbose);
@@ -69,19 +76,23 @@ class Cli {
                 path.join(currentPath, argv.path, checkFile)
               )
             );
+            const reports = [];
             for (let i = 0; i < checks.length; i++) {
               const check = checks[i];
               const provider = new this.Provider();
               const report = await provider.evaluate(check);
-              if (argv.output) {
-                this.output(report, argv);
-              }
-              if (onSuccess) onSuccess(report, argv);
+              reports.push({ configuration: check.configuration, report });
 
-              process.exit(0);
+              if (onSuccess)
+                onSuccess({ report, argv, configuration: check.configuration });
             }
+            if (argv.output) {
+              this.output(reports, argv);
+            }
+            process.exit(0);
           } catch (error) {
             console.error("Error:", error.message);
+            if (argv.verbose) console.error(error);
             if (onFail) onFail(error, argv);
             process.exit(1);
           }

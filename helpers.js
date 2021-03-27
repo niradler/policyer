@@ -1,3 +1,4 @@
+const figlet = require("figlet");
 let verbose = false;
 
 const logger = (...args) => {
@@ -8,4 +9,13 @@ const setVerbose = (isActive) => {
   verbose = isActive;
 };
 
-module.exports = { logger, setVerbose };
+const logo = () => {
+  figlet("policyer", function (err, data) {
+    if (data) console.log(data);
+    else if (err) {
+      console.error(err.message);
+    }
+  });
+};
+
+module.exports = { logger, setVerbose, logo };
