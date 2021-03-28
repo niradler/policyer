@@ -27,6 +27,7 @@
               "path": "accounts[].name",
               "condition": "equal",
               "evaluationMethod": "map",
+              "evaluationMethodFailPolicy": "and",
               "utility": "isString",
               "value": true
             }

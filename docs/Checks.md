@@ -33,6 +33,7 @@ fields:
 - path : String - path in data
 - condition : String - one of equal/not/gt/gte/lt/lte/includes
 - evaluationMethod: String - map (default: none)
+- evaluationMethodFailPolicy: String - and/or (default: and)
 - utility : every [lodash](https://lodash.com/docs/) methods
 - utilityProps : Array - array of parameters to pass to the utility function
 - value : any - value to compare

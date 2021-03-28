@@ -98,8 +98,15 @@ class Provider {
         default:
           throw new Error("Unknown evaluationMethod");
       }
-
-      return { evaluation: !evaluations.includes(false), value };
+      const evaluationMethodFailPolicy =
+        step.evaluationMethodFailPolicy || "and";
+      return {
+        evaluation:
+          evaluationMethodFailPolicy === "and"
+            ? !evaluations.includes(false)
+            : evaluations.includes(true),
+        value,
+      };
     }
 
     value = this.getPath(data, step.path, check.parser);
