@@ -13,3 +13,4 @@ Create a check system in an extendable way, create a provider to feed the checks
 ### policyer modules:
 
 - [policyer-todo](https://github.com/niradler/policyer-todo)
+- [policyer-http](https://github.com/niradler/policyer-http)
