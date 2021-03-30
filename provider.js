@@ -10,6 +10,10 @@ class Provider {
     this.utilities = _;
   }
 
+  static compile(str, vars = {}) {
+    return _.template(str)({ ...process.env, ...vars });
+  }
+
   static listChecks(path) {
     if (fs.statSync(path).isDirectory()) return fs.readdirSync(path);
 
