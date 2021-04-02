@@ -62,6 +62,17 @@ class Cli {
             default: "clean",
             choices: ["clean", "details"],
           });
+          yargs.positional("failOn", {
+            alias: "fo",
+            type: "string",
+            describe: "fail on",
+            default: "any",
+          });
+          yargs.positional("failOnValue", {
+            alias: "fov",
+            type: "string",
+            describe: "fail on value",
+          });
         },
         async (argv) => {
           if (argv.verbose) setVerbose(argv.verbose);
@@ -90,7 +101,8 @@ class Cli {
             if (argv.output) {
               this.output(reports, argv);
             }
-            process.exit(0);
+            const exitCode = this.Provider.evaluateReports(reports, argv);
+            process.exit(exitCode);
           } catch (error) {
             console.error("Error:", error.message);
             if (argv.verbose) console.error(error);

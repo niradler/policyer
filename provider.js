@@ -35,6 +35,27 @@ class Provider {
     return check;
   }
 
+  static evaluateReports(reports, { failOn, failOnValue }) {
+    for (let i = 0; i < reports.length; i++) {
+      const { report } = reports[i];
+      for (const key in report) {
+        if (Object.hasOwnProperty.call(report, key)) {
+          const check = report[key];
+          if (check.hasError) {
+            if (failOn == "any") {
+              return 1;
+            }
+            if (_.get(check, failOn) == failOnValue) {
+              return 1;
+            }
+          }
+        }
+      }
+    }
+
+    return 0;
+  }
+
   evaluate() {
     throw new Error("Not implemented");
   }

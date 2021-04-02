@@ -1,0 +1,78 @@
+[
+  {
+    "configuration": {
+      "provider": "todo-provider",
+      "type": "resource",
+      "resource": "todo",
+      "payload": { "id": 1 }
+    },
+    "report": {
+      "todo-id-check": {
+        "hasError": false,
+        "check": "check if todo has an id.",
+        "stepsResults": [true, true],
+        "inspectedValues": [1, 1],
+        "status": "success",
+        "severity": "High"
+      },
+      "todo-userId-check": {
+        "hasError": false,
+        "check": "check if todo has a userId.",
+        "stepsResults": [true, true],
+        "inspectedValues": [1, [1, 1]],
+        "status": "success",
+        "severity": "High"
+      },
+      "todo-title-check": {
+        "hasError": false,
+        "check": "check if todo has a title.",
+        "stepsResults": [true, true],
+        "inspectedValues": ["delectus aut autem", "delectus aut autem"],
+        "status": "success",
+        "severity": "Warning"
+      },
+      "todo-completed-check": {
+        "hasError": false,
+        "check": "check if todo has a valid completed field.",
+        "stepsResults": [true],
+        "inspectedValues": [false],
+        "status": "success",
+        "severity": "Warning"
+      }
+    }
+  },
+  {
+    "configuration": {
+      "provider": "todo-provider",
+      "type": "resource",
+      "resource": "todo",
+      "payload": { "id": 1 }
+    },
+    "report": {
+      "todo-id-check": {
+        "hasError": false,
+        "check": "check if todo has an id.",
+        "stepsResults": [true, true],
+        "inspectedValues": [1, 1],
+        "status": "success",
+        "severity": "High"
+      },
+      "todo-title-check": {
+        "hasError": false,
+        "check": "check if todo has a title.",
+        "stepsResults": [true],
+        "inspectedValues": ["delectus aut autem"],
+        "status": "success",
+        "severity": "Warning"
+      },
+      "todo-completed-check": {
+        "hasError": false,
+        "check": "check if todo has a valid completed field.",
+        "stepsResults": [true],
+        "inspectedValues": [false],
+        "status": "success",
+        "severity": "Warning"
+      }
+    }
+  }
+]

@@ -1,5 +1,6 @@
 const Provider = require("../provider");
 const { setVerbose } = require("../helpers");
+const reports = require("./report.json");
 setVerbose(false);
 
 it("Provider - parse json.", () => {
@@ -17,6 +18,29 @@ it("Provider - listChecks", () => {
   expect(checks[0]).toBe("jamespathCheck.json");
   expect(checks[1]).toBe("todoCheck.json");
   expect(checks[2]).toBe("todoCheck.yml");
+});
+
+it("Provider - evaluateReports", () => {
+  let statusCode = Provider.evaluateReports(reports, {
+    failOn: "severity",
+    failOnValue: "High",
+  });
+  expect(statusCode).toBe(0);
+  statusCode = Provider.evaluateReports(reports, {
+    failOn: "any",
+  });
+  expect(statusCode).toBe(0);
+  reports[0].report["todo-id-check"].hasError = true;
+  statusCode = Provider.evaluateReports(reports, {
+    failOn: "any",
+  });
+  expect(statusCode).toBe(1);
+  reports[0].report["todo-id-check"].hasError = true;
+  statusCode = Provider.evaluateReports(reports, {
+    failOn: "severity",
+    failOnValue: "High",
+  });
+  expect(statusCode).toBe(1);
 });
 
 it("Provider - evaluate", () => {
