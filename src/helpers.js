@@ -11,12 +11,13 @@ const setVerbose = (isActive) => {
 };
 
 const logo = () => {
-  figlet("policyer", function (err, data) {
-    if (data) console.log(data);
-    else if (err) {
-      console.error(err.message);
-    }
-  });
+  console.log(
+    figlet.textSync("Policyer", {
+      font: "Standard",
+      whitespaceBreak: false,
+    })
+  );
+  console.log(chalk.yellow("Visit us at policyer.org"));
 };
 
 module.exports = { logger, setVerbose, logo, figlet, chalk };
