@@ -3,11 +3,12 @@ const fs = require("fs");
 const YAML = require("yaml");
 const jmespath = require("jmespath");
 const { logger } = require("./helpers");
+const utilities = require("./utilities");
 
 class Provider {
   constructor(name) {
     this.name = name;
-    this.utilities = _;
+    this.utilities = utilities;
   }
 
   static compile(str, vars = {}) {
@@ -62,9 +63,10 @@ class Provider {
 
   evaluateUtility(utility, value, utilityProps = []) {
     if (!utility) return value;
-    if (!this.utilities[utility]) throw new Error("utility not found.");
+    const utilityFn = _.get(this.utilities, utility);
+    if (!utilityFn) throw new Error("utility not found.");
 
-    return this.utilities[utility](value, ...utilityProps);
+    return utilityFn(value, ...utilityProps);
   }
 
   getPath(data, path, parser) {

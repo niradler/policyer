@@ -1,5 +1,5 @@
-const Provider = require("../provider");
-const { setVerbose } = require("../helpers");
+const Provider = require("../src/provider");
+const { setVerbose } = require("../src/helpers");
 const reports = require("./report.json");
 setVerbose(false);
 
