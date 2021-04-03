@@ -1,4 +1,5 @@
 const figlet = require("figlet");
+const chalk = require("chalk");
 let verbose = false;
 
 const logger = (...args) => {
@@ -18,4 +19,4 @@ const logo = () => {
   });
 };
 
-module.exports = { logger, setVerbose, logo };
+module.exports = { logger, setVerbose, logo, figlet, chalk };

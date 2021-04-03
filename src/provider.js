@@ -9,6 +9,7 @@ class Provider {
   constructor(name) {
     this.name = name;
     this.utilities = utilities;
+    this.vars = {};
   }
 
   static compile(str, vars = {}) {
@@ -57,6 +58,10 @@ class Provider {
     return 0;
   }
 
+  setVars(vars) {
+    this.vars = vars;
+  }
+
   evaluate() {
     throw new Error("Not implemented");
   }
@@ -87,19 +92,18 @@ class Provider {
   }
 
   evaluateValue(value, step) {
-    logger({ value });
     const finalValue = this.evaluateUtility(
       step.utility,
       value,
       step.utilityProps
     );
-    logger({ finalValue });
+
     const evaluation = this.evaluateCondition(
       step.condition,
       finalValue,
       step.value
     );
-    logger({ evaluation });
+
     return evaluation;
   }
 
@@ -142,6 +146,9 @@ class Provider {
   }
 
   evaluateCondition(condition, value, checkValue) {
+    if (_.isString(checkValue))
+      checkValue = Provider.compile(checkValue, this.vars);
+
     switch (condition) {
       case "equal":
         return value == checkValue;
@@ -197,7 +204,6 @@ class Provider {
         }
       });
 
-      logger(stepsResults, inspectedValues);
       report[check.id] = {
         hasError: stepsResults.includes(false),
         check,

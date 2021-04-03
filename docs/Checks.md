@@ -36,7 +36,7 @@ fields:
 - evaluationMethodFailPolicy: String - and/or (default: and)
 - utility : every [lodash](https://lodash.com/docs/) methods
 - utilityProps : Array - array of parameters to pass to the utility function
-- value : any - value to compare
+- value : any - value to compare (you can use env vars or custom vars, <%= NODE_ENV %>)
 
 you can add condition for steps:
 
