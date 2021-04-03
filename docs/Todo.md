@@ -4,3 +4,5 @@
 - regex path
 - complex example
 - create check with code
+- typescript
+- docs (gitbook or equalvent)
