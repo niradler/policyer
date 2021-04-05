@@ -55,13 +55,6 @@ class Cli {
             default: "json",
             choices: ["json"],
           });
-          yargs.positional("report", {
-            alias: "r",
-            type: "string",
-            describe: "report type",
-            default: "clean",
-            choices: ["clean", "details"],
-          });
           yargs.positional("failOn", {
             alias: "fo",
             type: "string",

@@ -33,11 +33,15 @@ module.exports = cli;
 
 ```
 
-The cli has 3 available arguments:
+The cli available arguments:
 
 - --path - path to the checks folder (relative)
 - --internal - how do you want to reference the checks folder (defaults to true so checks folder need to be inside provider)
-- --verbose - print args
+- --verbose - verbose mode print additional logs
+- --format - output format
+- --output - output file
+- --failOn - any or a report field
+- --failOnValue - report field value or empty if failOn=any
 
 ```sh
 node cli.js --path "./checks" -v
