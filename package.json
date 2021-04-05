@@ -1,6 +1,6 @@
 {
   "name": "policyer",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "Create a check system in an extendable way, create a provider to feed the checks with data, checks can be written in json or yml format.",
   "main": "src/index.js",
   "bin": {
