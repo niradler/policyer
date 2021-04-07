@@ -1,0 +1,13 @@
+{
+  "extends": ["tslint:recommended", "tslint-config-prettier"],
+  "rules": {
+    "no-console": {
+      "severity": "warning",
+      "options": ["log", "error", "debug", "info", "time", "timeEnd", "trace"]
+    },
+    "no-var-requires": false,
+    "prefer-for-of": false,
+    "no-shadowed-variable": { "severity": "warning" },
+    "triple-equals": { "severity": "warning" }
+  }
+}

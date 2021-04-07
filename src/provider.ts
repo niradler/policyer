@@ -1,53 +1,61 @@
-const _ = require("lodash");
-const fs = require("fs");
-const YAML = require("yaml");
-const jmespath = require("jmespath");
-const { logger } = require("./helpers");
-const utilities = require("./utilities");
+import * as _ from 'lodash';
+import * as fs from 'fs';
+import * as YAML from 'yaml';
+import * as jmespath from 'jmespath';
+import { logger } from './helpers';
+import { utilities } from './utilities';
+import { Report, Check, Step } from './types';
 
 class Provider {
-  constructor(name) {
+  public name: any;
+  public utilities: any;
+  public vars: any;
+  public report: any;
+  public evaluation: any;
+  public value: any;
+
+  constructor(name: string) {
     this.name = name;
     this.utilities = utilities;
     this.vars = {};
   }
 
-  static compile(str, vars = {}) {
+  static compile(str: string, vars = {}) {
     return _.template(str)({ ...process.env, ...vars });
   }
 
-  static listChecks(path) {
+  static listChecks(path: string) {
     if (fs.statSync(path).isDirectory()) return fs.readdirSync(path);
 
     return [];
   }
 
-  static readCheck(path) {
+  static readCheck(path: string) {
     let check;
-    if (path.endsWith(".json")) {
-      const file = fs.readFileSync(path, "utf8");
+    if (path.endsWith('.json')) {
+      const file = fs.readFileSync(path, 'utf8');
       check = JSON.parse(file);
-    } else if (path.endsWith(".yml") || path.endsWith(".yaml")) {
-      const file = fs.readFileSync(path, "utf8");
+    } else if (path.endsWith('.yml') || path.endsWith('.yaml')) {
+      const file = fs.readFileSync(path, 'utf8');
       check = YAML.parse(file);
     } else {
-      throw new Error("check extension is not valid. (json/yml/yaml)");
+      throw new Error('check extension is not valid. (json/yml/yaml)');
     }
 
     return check;
   }
 
-  static evaluateReports(reports, { failOn, failOnValue }) {
+  static evaluateReports(reports: any, { failOn, failOnValue }: { failOn: string; failOnValue?: string }) {
     for (let i = 0; i < reports.length; i++) {
       const { report } = reports[i];
       for (const key in report) {
         if (Object.hasOwnProperty.call(report, key)) {
           const check = report[key];
           if (check.hasError) {
-            if (failOn == "any") {
+            if (failOn == 'any') {
               return 1;
             }
-            if (_.get(check, failOn) == failOnValue) {
+            if (_.get<any, string>(check, failOn) == failOnValue) {
               return 1;
             }
           }
@@ -58,29 +66,29 @@ class Provider {
     return 0;
   }
 
-  setVars(vars) {
+  setVars(vars: any) {
     this.vars = vars;
   }
 
   evaluate() {
-    throw new Error("Not implemented");
+    throw new Error('Not implemented');
   }
 
-  evaluateUtility(utility, value, utilityProps = []) {
+  evaluateUtility(utility: any, value: any, utilityProps = []) {
     if (!utility) return value;
     const utilityFn = _.get(this.utilities, utility);
-    if (!utilityFn) throw new Error("utility not found.");
+    if (!utilityFn) throw new Error('utility not found.');
 
     return utilityFn(value, ...utilityProps);
   }
 
-  getPath(data, path, parser) {
+  getPath(data: any, path: any, parser: any) {
     let value;
     switch (parser) {
-      case "jmespath":
+      case 'jmespath':
         value = jmespath.search(data, path);
         break;
-      case "lodash":
+      case 'lodash':
         value = _.get(data, path, undefined);
         break;
       default:
@@ -91,28 +99,19 @@ class Provider {
     return value;
   }
 
-  evaluateValue(value, step) {
-    const finalValue = this.evaluateUtility(
-      step.utility,
-      value,
-      step.utilityProps
-    );
+  evaluateValue(value: any, step: any) {
+    const finalValue = this.evaluateUtility(step.utility, value, step.utilityProps);
 
-    const evaluation = this.evaluateCondition(
-      step.condition,
-      finalValue,
-      step.value
-    );
+    const evaluation = this.evaluateCondition(step.condition, finalValue, step.value);
 
     return evaluation;
   }
 
-  evaluateStep(data, step, check) {
-    const steps = step["and"] || step["or"];
+  evaluateStep(data: any, step: Step, check: Check) {
+    const steps = step.and || step.or;
     if (steps) {
-      const evaluations = steps.map((step) =>
-        this.evaluateStep(data, step, check)
-      );
+      /* @ts-ignore */
+      const evaluations: any = steps.map((step: any) => this.evaluateStep(data, step, check));
 
       return evaluations;
     }
@@ -121,21 +120,17 @@ class Provider {
       let evaluations = [];
 
       switch (step.evaluationMethod) {
-        case "map":
+        case 'map':
           value = this.getPath(data, step.path, check.parser);
-          evaluations = value.map((value) => this.evaluateValue(value, step));
+          evaluations = value.map((value: any) => this.evaluateValue(value, step));
           break;
 
         default:
-          throw new Error("Unknown evaluationMethod");
+          throw new Error('Unknown evaluationMethod');
       }
-      const evaluationMethodFailPolicy =
-        step.evaluationMethodFailPolicy || "and";
+      const evaluationMethodFailPolicy = step.evaluationMethodFailPolicy || 'and';
       return {
-        evaluation:
-          evaluationMethodFailPolicy === "and"
-            ? !evaluations.includes(false)
-            : evaluations.includes(true),
+        evaluation: evaluationMethodFailPolicy === 'and' ? !evaluations.includes(false) : evaluations.includes(true),
         value,
       };
     }
@@ -145,57 +140,54 @@ class Provider {
     return { evaluation, value };
   }
 
-  evaluateCondition(condition, value, checkValue) {
-    if (_.isString(checkValue))
-      checkValue = Provider.compile(checkValue, this.vars);
+  evaluateCondition(condition: any, value: any, checkValue: any) {
+    if (_.isString(checkValue)) checkValue = Provider.compile(checkValue, this.vars);
 
     switch (condition) {
-      case "equal":
+      case 'equal':
         return value == checkValue;
 
-      case "not":
+      case 'not':
         return value != checkValue;
 
-      case "includes":
+      case 'includes':
         if (Array.isArray(value)) return value.includes(checkValue);
         return checkValue.includes(value);
 
-      case "gt":
+      case 'gt':
         return value > checkValue;
 
-      case "gte":
+      case 'gte':
         return value >= checkValue;
 
-      case "lt":
+      case 'lt':
         return value < checkValue;
 
-      case "lte":
+      case 'lte':
         return value < checkValue;
 
       default:
-        throw new Error("Condition not found.");
+        throw new Error('Condition not found.');
     }
   }
 
-  evaluateChecks(data, checks) {
-    const report = {};
+  evaluateChecks(data: any, checks: any) {
+    const report: Report = {};
     for (let i = 0; i < checks.length; i++) {
       const check = checks[i];
-      const inspectedValues = [];
-      const stepsResults = [];
-      check.steps.forEach((step) => {
+      const inspectedValues: any[] = [];
+      const stepsResults: any[] = [];
+      check.steps.forEach((step: any) => {
         const evaluations = this.evaluateStep(data, step, check);
         if (Array.isArray(evaluations)) {
-          const evaluationArr = [];
-          const valuesArr = [];
+          const evaluationArr: any[] = [];
+          const valuesArr: any[] = [];
           evaluations.forEach((evaluations) => {
             const { evaluation, value } = evaluations;
             evaluationArr.push(evaluation);
             valuesArr.push(value);
           });
-          const finalEvaluation = step["and"]
-            ? !evaluationArr.includes(false)
-            : evaluationArr.includes(true);
+          const finalEvaluation = step.and ? !evaluationArr.includes(false) : evaluationArr.includes(true);
           stepsResults.push(finalEvaluation);
           inspectedValues.push(valuesArr);
         } else {
