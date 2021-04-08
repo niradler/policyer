@@ -1,9 +1,9 @@
 {
   "name": "policyer",
-  "version": "0.1.0",
+  "version": "0.0.24",
   "description": "Create a check system in an extendable way, create a provider to feed the checks with data, checks can be written in json or yml format.",
   "bin": {
-    "policyer": "src/policyer.js"
+    "policyer": "lib/policyer.js"
   },
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
