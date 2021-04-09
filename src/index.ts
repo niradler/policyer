@@ -1,4 +1,5 @@
 module.exports = {
-  Provider: require('./provider'),
-  Cli: require('./cli'),
+  Provider: require('./provider').default,
+  Cli: require('./cli').default,
+  ChecksRunner: require('./checksRunner').default,
 };

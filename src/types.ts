@@ -11,9 +11,12 @@ export interface Step {
 }
 
 export interface Check {
+  name: string;
+  id: string;
   steps: Step[];
   parser: string;
   configuration: any;
+  [key: string]: any;
 }
 
 export interface Report {

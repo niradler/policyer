@@ -42,6 +42,8 @@ The cli available arguments:
 - --output - output file
 - --failOn - any or a report field
 - --failOnValue - report field value or empty if failOn=any
+- --filter - filter regex (^todo)
+- --filterFlags - filter flags (ig)
 
 ```sh
 node cli.js --path "./checks" -v

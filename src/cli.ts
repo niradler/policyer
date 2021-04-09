@@ -58,15 +58,21 @@ class Cli {
             choices: ['json'],
           });
           yargs.positional('failOn', {
-            alias: 'fo',
             type: 'string',
             describe: 'fail on',
             default: 'any',
           });
           yargs.positional('failOnValue', {
-            alias: 'fov',
             type: 'string',
             describe: 'fail on value',
+          });
+          yargs.positional('filter', {
+            type: 'string',
+            describe: 'filter regex',
+          });
+          yargs.positional('filterFlags', {
+            type: 'string',
+            describe: 'filter flags',
           });
         },
         async (argv: any) => {
@@ -75,7 +81,11 @@ class Cli {
           logger(argv);
           try {
             const currentPath = this.getCurrentPath(argv);
-            const checksFiles = this.Provider.listChecks(path.join(currentPath, argv.path));
+            let filter;
+            if (argv.filter) {
+              filter = [argv.filter, argv.filterFlags || ''];
+            }
+            const checksFiles = this.Provider.listChecks(path.join(currentPath, argv.path), filter);
             const checks = checksFiles.map((checkFile: any) =>
               this.Provider.readCheck(path.join(currentPath, argv.path, checkFile)),
             );
@@ -110,4 +120,4 @@ class Cli {
   }
 }
 
-module.exports = Cli;
+export default Cli;

@@ -1,4 +1,4 @@
-const Provider = require('../lib/provider');
+const { Provider, ChecksRunner } = require('../lib');
 const { setVerbose } = require('../lib/helpers');
 const reports = require('./report.json');
 setVerbose(false);
@@ -25,21 +25,25 @@ it('Provider - evaluateReports', () => {
     failOn: 'severity',
     failOnValue: 'High',
   });
+
   expect(statusCode).toBe(0);
   statusCode = Provider.evaluateReports(reports, {
     failOn: 'any',
   });
+
   expect(statusCode).toBe(0);
   reports[0].report['todo-id-check'].hasError = true;
   statusCode = Provider.evaluateReports(reports, {
     failOn: 'any',
   });
+
   expect(statusCode).toBe(1);
   reports[0].report['todo-id-check'].hasError = true;
   statusCode = Provider.evaluateReports(reports, {
     failOn: 'severity',
     failOnValue: 'High',
   });
+
   expect(statusCode).toBe(1);
 });
 
@@ -122,4 +126,37 @@ it('Provider - evaluateChecks - error', () => {
   expect(report['todo-completed-check'].check.severity).toBe('Warning');
   expect(report['todo-completed-check'].stepsResults.includes(false)).toBe(false);
   expect(report['todo-completed-check'].inspectedValues[0]).toBe(false);
+});
+
+it('ChecksRunner', async () => {
+  const data = {
+    userId: 1,
+    id: 1,
+    accounts: [
+      { name: 'one', id: 1, email: 'one@policyer.com' },
+      { name: 'two', id: 2, email: 'two@policyer.com' },
+    ],
+    title: 'delectus aut autem',
+    completed: false,
+  };
+  class DemoProvider extends Provider {
+    async evaluate({ configuration, checks }) {
+      const reports = this.evaluateChecks(data, checks);
+
+      return reports;
+    }
+  }
+  const checksRunner = new ChecksRunner(DemoProvider, 'checks');
+
+  const { reports, exitCode } = await checksRunner.run({ filterRegex: ['^todo', ''] }).catch((e) => {
+    console.error(e);
+    expect(e).toBe(undefined);
+  });
+
+  expect(exitCode).toBe(1);
+  expect(Array.isArray(reports)).toBe(true);
+
+  expect(reports[0].report['todo-id-check'].check.severity).toBe('High');
+  expect(reports[0].report['todo-id-check'].stepsResults.includes(false)).toBe(false);
+  expect(reports[0].report['todo-id-check'].inspectedValues[0]).toBe(1);
 });

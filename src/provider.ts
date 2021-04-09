@@ -24,10 +24,16 @@ class Provider {
     return _.template(str)({ ...process.env, ...vars });
   }
 
-  static listChecks(path: string) {
-    if (fs.statSync(path).isDirectory()) return fs.readdirSync(path);
+  static listChecks(path: string, filterRegex?: string[]): string[] {
+    let files: string[] = [];
+    if (fs.statSync(path).isDirectory()) {
+      files = fs.readdirSync(path);
+    }
+    if (Array.isArray(filterRegex) && Array.isArray(files)) {
+      files = files.filter((fileName) => new RegExp(filterRegex[0], filterRegex[1]).test(fileName));
+    }
 
-    return [];
+    return files;
   }
 
   static readCheck(path: string) {
@@ -45,7 +51,9 @@ class Provider {
     return check;
   }
 
-  static evaluateReports(reports: any, { failOn, failOnValue }: { failOn: string; failOnValue?: string }) {
+  static evaluateReports(reports: any, { failOn, failOnValue }: { failOn?: string; failOnValue?: string }) {
+    failOn = failOn || 'any';
+
     for (let i = 0; i < reports.length; i++) {
       const { report } = reports[i];
       for (const key in report) {
@@ -122,6 +130,7 @@ class Provider {
       switch (step.evaluationMethod) {
         case 'map':
           value = this.getPath(data, step.path, check.parser);
+          if (!Array.isArray(value)) throw new Error('Evaluate value is not an array');
           evaluations = value.map((value: any) => this.evaluateValue(value, step));
           break;
 
@@ -140,7 +149,7 @@ class Provider {
     return { evaluation, value };
   }
 
-  evaluateCondition(condition: any, value: any, checkValue: any) {
+  evaluateCondition(condition: string, value: any, checkValue: any) {
     if (_.isString(checkValue)) checkValue = Provider.compile(checkValue, this.vars);
 
     switch (condition) {
@@ -171,13 +180,13 @@ class Provider {
     }
   }
 
-  evaluateChecks(data: any, checks: any) {
+  evaluateChecks(data: any, checks: Check[]) {
     const report: Report = {};
     for (let i = 0; i < checks.length; i++) {
       const check = checks[i];
       const inspectedValues: any[] = [];
       const stepsResults: any[] = [];
-      check.steps.forEach((step: any) => {
+      check.steps.forEach((step: Step) => {
         const evaluations = this.evaluateStep(data, step, check);
         if (Array.isArray(evaluations)) {
           const evaluationArr: any[] = [];
@@ -210,4 +219,4 @@ class Provider {
   }
 }
 
-module.exports = Provider;
+export default Provider;
