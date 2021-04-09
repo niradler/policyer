@@ -17,7 +17,7 @@ class ChecksRunner {
     failOnValue,
   }: {
     onSuccess?: (data: any) => void;
-    onFail?: (error: Error) => void;
+    onFail?: (error: Error, args?: any) => void;
     filterRegex?: string[];
     failOn?: string;
     failOnValue?: string;

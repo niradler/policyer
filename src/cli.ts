@@ -94,7 +94,7 @@ class Cli {
               const check = checks[i];
               const provider = new this.Provider();
               const report = await provider.evaluate(check);
-              reports.push({ configuration: check.configuration, report });
+              reports.push({ file: checksFiles[i], configuration: check.configuration, report });
 
               if (onSuccess) onSuccess({ report, argv, configuration: check.configuration });
             }
