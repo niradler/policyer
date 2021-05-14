@@ -6,7 +6,7 @@ class ChecksRunner {
 
   constructor(Provider: any, checksPath: string) {
     this.Provider = Provider;
-    this.checksPath = checksPath;
+    this.checksPath = path.isAbsolute(checksPath) ? checksPath : path.join(process.cwd(), checksPath);
   }
 
   async run({
@@ -23,11 +23,10 @@ class ChecksRunner {
     failOnValue?: string;
   }) {
     try {
-      const currentPath = process.cwd();
-      const checksFiles = this.Provider.listChecks(path.join(currentPath, this.checksPath), filterRegex);
+      const checksFiles = this.Provider.listChecks(this.checksPath, filterRegex);
 
       const checks = checksFiles.map((checkFile: string) =>
-        this.Provider.readCheck(path.join(currentPath, this.checksPath, checkFile)),
+        this.Provider.readCheck(path.join(this.checksPath, checkFile)),
       );
       const reports = [];
       for (let i = 0; i < checks.length; i++) {

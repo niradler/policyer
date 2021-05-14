@@ -1,6 +1,6 @@
 {
   "name": "policyer",
-  "version": "0.0.26",
+  "version": "0.0.27",
   "description": "Create a check system in an extendable way, create a provider to feed the checks with data, checks can be written in json or yml format.",
   "bin": {
     "policyer": "lib/policyer.js"
@@ -13,11 +13,13 @@
     "version": "npm run format && git add -A src && npm version minor",
     "postversion": "git push && git push --tags",
     "build": "tsc",
+    "clean": "npx rimraf lib",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "tslint -p tsconfig.json --fix",
     "test-ts": "jest --config jestconfig.json",
     "prepare": "husky install && npm run build",
-    "test": "jest"
+    "test": "jest",
+    "docs": "typedoc"
   },
   "keywords": [
     "policy",
@@ -39,6 +41,7 @@
     "ts-jest": "^26.5.4",
     "tslint": "^6.1.3",
     "tslint-config-prettier": "^1.18.0",
+    "typedoc": "^0.20.35",
     "typescript": "^4.2.4"
   },
   "dependencies": {

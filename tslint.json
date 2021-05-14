@@ -8,6 +8,7 @@
     "no-var-requires": false,
     "prefer-for-of": false,
     "no-shadowed-variable": { "severity": "warning" },
-    "triple-equals": { "severity": "warning" }
+    "triple-equals": { "severity": "warning" },
+    "jsdoc-format": { "severity": "warning" }
   }
 }

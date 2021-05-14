@@ -20,10 +20,29 @@ class Provider {
     this.vars = {};
   }
 
+  /**
+  * @internal
+  * Compiled string with variables and environment variables
+  * 
+  * @remarks
+  * Using lodash template
+  * 
+  * @param str Parsed string with template parameters
+  * @param vars Variables object
+  * @return Compiled string with variables injected
+  */
   static compile(str: string, vars = {}) {
     return _.template(str)({ ...process.env, ...vars });
   }
 
+  /**
+* @internal
+* List files in a folder
+* 
+* @param path Path to folder
+* @param filterRegex Regex match to filter files list 
+* @return List of files
+*/
   static listChecks(path: string, filterRegex?: string[]): string[] {
     let files: string[] = [];
     if (fs.statSync(path).isDirectory()) {
@@ -36,6 +55,13 @@ class Provider {
     return files;
   }
 
+  /**
+* @internal
+* Read check file
+* 
+* @param path Path to check file [json/yml/yaml]
+* @return Check object
+*/
   static readCheck(path: string) {
     let check;
     if (path.endsWith('.json')) {
@@ -74,6 +100,13 @@ class Provider {
     return 0;
   }
 
+  /**
+* @internal
+* Set vars to expose them to the check {@link compile}
+* 
+* @param path Path to check file [json/yml/yaml]
+* @return Check object
+*/
   setVars(vars: any) {
     this.vars = vars;
   }
