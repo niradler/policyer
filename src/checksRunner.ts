@@ -29,17 +29,34 @@ class ChecksRunner {
         this.Provider.readCheck(path.join(this.checksPath, checkFile)),
       );
       const reports = [];
+      const summary = {
+        passed: 0,
+        failed: 0,
+      };
       for (let i = 0; i < checks.length; i++) {
         const check = checks[i];
         const provider = new this.Provider();
         const report = await provider.evaluate(check).catch((error: any) => ({ error }));
-        reports.push({ file: checksFiles[i], configuration: check.configuration, report });
+        const totals = {
+          passed: 0,
+          failed: 0,
+        };
+        report.stepsResults.foreach((stepResult: any) => {
+          if (stepResult) {
+            totals.passed += 1;
+          } else {
+            totals.failed += 1;
+          }
+        });
+        summary.passed += totals.passed;
+        summary.failed += totals.failed;
+        reports.push({ file: checksFiles[i], configuration: check.configuration, report, totals });
 
         if (onSuccess) onSuccess({ report, configuration: check.configuration });
       }
 
       const exitCode = this.Provider.evaluateReports(reports, { failOn, failOnValue });
-      return { reports, exitCode };
+      return { totals: summary, reports, exitCode };
     } catch (error) {
       if (onFail) onFail(error);
       else {
