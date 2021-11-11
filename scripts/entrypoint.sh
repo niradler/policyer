@@ -27,8 +27,6 @@ if [ -n "$INPUT_INTERNAL" ] && [ "$INPUT_INTERNAL" = "false" ]; then
     FLAGS="${FLAGS} --internal false"
 fi
 
-echo "GITHUB_HEAD_REF=${GITHUB_HEAD_REF}"
-echo "GITHUB_BASE_REF=${GITHUB_BASE_REF}"
 echo "GITHUB_REF=${GITHUB_REF}"
 echo "GITHUB_REPOSITORY=${GITHUB_REPOSITORY}"
 echo "GITHUB_SHA=${GITHUB_SHA}"
