@@ -33,8 +33,6 @@ echo "GITHUB_SHA=${GITHUB_SHA}"
 echo "GITHUB_ACTOR=${GITHUB_ACTOR}"
 echo "GITHUB_RUN_NUMBER=${GITHUB_RUN_NUMBER}"
 
-echo "Directory: $1"
-
 echo "policyer ${FLAGS}"
 
 RESULTS=$(npm i -g policyer && policyer "$FLAGS")
