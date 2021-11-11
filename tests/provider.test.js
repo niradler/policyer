@@ -156,6 +156,7 @@ it('ChecksRunner', async () => {
   expect(exitCode).toBe(1);
   expect(Array.isArray(reports)).toBe(true);
 
+  expect(reports[0].summary.passed).toBe(4);
   expect(reports[0].report['todo-id-check'].check.severity).toBe('High');
   expect(reports[0].report['todo-id-check'].stepsResults.includes(false)).toBe(false);
   expect(reports[0].report['todo-id-check'].inspectedValues[0]).toBe(1);

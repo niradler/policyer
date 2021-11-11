@@ -41,25 +41,29 @@ class ChecksRunner {
           passed: 0,
           failed: 0,
         };
-        report.stepsResults.foreach((stepResult: any) => {
-          if (stepResult) {
-            totals.passed += 1;
-          } else {
+        const checkIds = Object.keys(report);
+
+        checkIds.forEach((key: string) => {
+          const checkReport = report[key];
+          if (checkReport.hasError) {
             totals.failed += 1;
+          } else {
+            totals.passed += 1;
           }
         });
         summary.passed += totals.passed;
         summary.failed += totals.failed;
-        reports.push({ file: checksFiles[i], configuration: check.configuration, report, totals });
+        reports.push({ file: checksFiles[i], configuration: check.configuration, report, summary: totals });
 
         if (onSuccess) onSuccess({ report, configuration: check.configuration });
       }
 
       const exitCode = this.Provider.evaluateReports(reports, { failOn, failOnValue });
-      return { totals: summary, reports, exitCode };
+      return { summary, reports, exitCode };
     } catch (error) {
       if (onFail) onFail(error);
       else {
+        console.error('ChecksRunner', error);
         throw new Error(error.message);
       }
     }

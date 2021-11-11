@@ -34,6 +34,8 @@ echo "GITHUB_ACTOR=${GITHUB_ACTOR}"
 echo "GITHUB_RUN_NUMBER=${GITHUB_RUN_NUMBER}"
 
 echo "Flags: ${FLAGS}"
+pwd
+ls
 
 RESULTS=''
 PROVIDER='policyer'
