@@ -17,15 +17,17 @@ class Cli {
     this.yargs = yargs;
   }
 
-  getCurrentPath(argv: any) {
-    const currentPath = argv.internal ? __dirname : process.cwd();
+  getPath(folderPath: string, internal: boolean = false) {
+    if (path.isAbsolute(folderPath)) {
+      return folderPath;
+    }
 
-    return currentPath;
+    return path.join(internal ? __dirname : process.cwd(), folderPath);
   }
 
   defaultOutput(reports: any, argv: any) {
-    const currentPath = this.getCurrentPath(argv);
-    fs.writeFileSync(path.join(currentPath, argv.output), JSON.stringify(reports));
+    const filePath = this.getPath(argv.output, false);
+    fs.writeFileSync(filePath, JSON.stringify(reports));
   }
 
   run(onSuccess: any, onFail: any) {
@@ -43,7 +45,7 @@ class Cli {
             alias: 'i',
             type: 'boolean',
             describe: 'use internal checks',
-            default: true,
+            default: false,
           });
           yargs.positional('output', {
             alias: 'o',
@@ -80,14 +82,14 @@ class Cli {
           logo();
           logger(argv);
           try {
-            const currentPath = this.getCurrentPath(argv);
+            const folderPath = this.getPath(argv.path, argv.internal);
             let filter;
             if (argv.filter) {
               filter = [argv.filter, argv.filterFlags || ''];
             }
-            const checksFiles = this.Provider.listChecks(path.join(currentPath, argv.path), filter);
+            const checksFiles = this.Provider.listChecks(folderPath, filter);
             const checks = checksFiles.map((checkFile: any) =>
-              this.Provider.readCheck(path.join(currentPath, argv.path, checkFile)),
+              this.Provider.readCheck(path.join(folderPath, checkFile)),
             );
             const reports = [];
             for (let i = 0; i < checks.length; i++) {

@@ -33,25 +33,22 @@ echo "GITHUB_SHA=${GITHUB_SHA}"
 echo "GITHUB_ACTOR=${GITHUB_ACTOR}"
 echo "GITHUB_RUN_NUMBER=${GITHUB_RUN_NUMBER}"
 
-echo "Flags: ${FLAGS}"
-
-RESULTS=''
 PROVIDER='policyer'
 
 if [[ -n $INPUT_PROVIDER ]]; then
     PROVIDER=$INPUT_PROVIDER
 fi
 
-echo "PROVIDER: ${PROVIDER}"
+echo "PROVIDER=${PROVIDER}"
+pwd
+npm i -g policyer
+npm i -g "$PROVIDER"
 
-RESULTS=$(npm i -g "$PROVIDER" && "$PROVIDER" "$FLAGS")
+echo "${PROVIDER} ${FLAGS}"
+
+$PROVIDER --version
+$PROVIDER "$FLAGS"
 
 EXIT_CODE=$?
-
-echo "$RESULTS"
-
-RESULTS="${RESULTS//$'\\n'/''}"
-
-echo "::set-output name=results::$RESULTS"
 
 exit $EXIT_CODE
