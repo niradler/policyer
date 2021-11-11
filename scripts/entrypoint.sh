@@ -34,8 +34,6 @@ echo "GITHUB_ACTOR=${GITHUB_ACTOR}"
 echo "GITHUB_RUN_NUMBER=${GITHUB_RUN_NUMBER}"
 
 echo "Flags: ${FLAGS}"
-pwd
-ls
 
 RESULTS=''
 PROVIDER='policyer'
@@ -43,6 +41,9 @@ PROVIDER='policyer'
 if [[ -n $INPUT_PROVIDER ]]; then
     PROVIDER=$INPUT_PROVIDER
 fi
+
+echo "PROVIDER: ${PROVIDER}"
+
 RESULTS=$(npm i -g "$PROVIDER" && "$PROVIDER" "$FLAGS")
 
 EXIT_CODE=$?
