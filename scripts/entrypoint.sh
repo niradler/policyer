@@ -33,9 +33,15 @@ echo "GITHUB_SHA=${GITHUB_SHA}"
 echo "GITHUB_ACTOR=${GITHUB_ACTOR}"
 echo "GITHUB_RUN_NUMBER=${GITHUB_RUN_NUMBER}"
 
-echo "policyer ${FLAGS}"
+echo "Flags: ${FLAGS}"
 
-RESULTS=$(npm i -g policyer && policyer "$FLAGS")
+RESULTS=''
+PROVIDER='policyer'
+
+if [[ -n $INPUT_PROVIDER ]]; then
+    PROVIDER=$INPUT_PROVIDER
+fi
+RESULTS=$(npm i -g "$PROVIDER" && "$PROVIDER" "$FLAGS")
 
 EXIT_CODE=$?
 
