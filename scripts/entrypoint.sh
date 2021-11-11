@@ -47,14 +47,6 @@ echo "$RESULTS"
 
 RESULTS="${RESULTS//$'\\n'/''}"
 
-if [ -n "$GITHUB_ENV" ]; then
-    {
-        echo "<<EOF"
-        echo "$RESULTS"
-        echo "EOF"
-    } >>$GITHUB_ENV
-fi
-
 echo "::set-output name=results::$RESULTS"
 
 exit $EXIT_CODE

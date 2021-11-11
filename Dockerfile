@@ -8,6 +8,6 @@ RUN npm i -g npm
 
 WORKDIR /usr/src/app
 
-COPY ./scripts/entrypoint.sh ./entrypoint.sh
+COPY ./scripts/entrypoint.sh /entrypoint.sh
 
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
