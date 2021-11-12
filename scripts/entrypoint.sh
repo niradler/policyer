@@ -4,9 +4,13 @@
 
 if [[ $GITHUB_ACTIONS != "true" ]]; then
     echo "Not a Github action"
-    # exit 1
 else
-    echo "Github action"
+    echo "Github action:"
+    echo "GITHUB_REF=${GITHUB_REF}"
+    echo "GITHUB_REPOSITORY=${GITHUB_REPOSITORY}"
+    echo "GITHUB_SHA=${GITHUB_SHA}"
+    echo "GITHUB_ACTOR=${GITHUB_ACTOR}"
+    echo "GITHUB_RUN_NUMBER=${GITHUB_RUN_NUMBER}"
 fi
 
 FLAGS=''
@@ -27,12 +31,6 @@ if [ -n "$INPUT_INTERNAL" ] && [ "$INPUT_INTERNAL" = "false" ]; then
     FLAGS="${FLAGS} --internal false"
 fi
 
-echo "GITHUB_REF=${GITHUB_REF}"
-echo "GITHUB_REPOSITORY=${GITHUB_REPOSITORY}"
-echo "GITHUB_SHA=${GITHUB_SHA}"
-echo "GITHUB_ACTOR=${GITHUB_ACTOR}"
-echo "GITHUB_RUN_NUMBER=${GITHUB_RUN_NUMBER}"
-
 PROVIDER='policyer'
 
 if [[ -n $INPUT_PROVIDER ]]; then
@@ -40,7 +38,7 @@ if [[ -n $INPUT_PROVIDER ]]; then
 fi
 
 echo "PROVIDER=${PROVIDER}"
-pwd
+
 npm i -g policyer
 npm i -g "$PROVIDER"
 
