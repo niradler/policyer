@@ -194,6 +194,7 @@ class Provider {
 
       case 'includes':
         if (Array.isArray(value)) return value.includes(checkValue);
+        else if (typeof value == 'string') return value.includes(checkValue);
         return checkValue.includes(value);
 
       case 'gt':

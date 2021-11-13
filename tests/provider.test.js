@@ -65,6 +65,12 @@ it('Provider - evaluateUtility', () => {
   expect(is).toBe(true);
 });
 
+it('Provider - evaluateUtility - regex', () => {
+  const provider = new Provider();
+  const is = provider.evaluateUtility('regex', 'policyer', ['/policyer/']);
+  expect(is).toBe(true);
+});
+
 it('Provider - evaluateCondition', () => {
   const provider = new Provider();
   const is = provider.evaluateCondition('equal', 1, 1);

@@ -25,6 +25,9 @@ checks:
         condition: not
         utility: isEmpty
         value: true
+      - path: title
+        condition: includes
+        value: autem
   - id: todo-completed-check
     name: check if todo has a valid completed field.
     severity: Warning

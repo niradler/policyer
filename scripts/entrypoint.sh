@@ -26,8 +26,7 @@ FLAGS=''
 
 if [ -n "$INPUT_INTERNAL" ] && [ "$INPUT_INTERNAL" = "true" ]; then
     FLAGS="${FLAGS} --internal true"
-fi
-if [ -n "$INPUT_INTERNAL" ] && [ "$INPUT_INTERNAL" = "false" ]; then
+elif [ -n "$INPUT_INTERNAL" ] && [ "$INPUT_INTERNAL" = "false" ]; then
     FLAGS="${FLAGS} --internal false"
 fi
 
@@ -39,13 +38,16 @@ fi
 
 echo "PROVIDER=${PROVIDER}"
 
-npm i -g policyer
-npm i -g "$PROVIDER"
-
 echo "${PROVIDER} ${FLAGS}"
 
-$PROVIDER --version
-$PROVIDER "$FLAGS"
+if [ "$PROVIDER" = "local" ]; then
+    npm i && npm run start -- "$FLAGS"
+else
+    npm i -g policyer
+    npm i -g "$PROVIDER"
+    $PROVIDER --version
+    $PROVIDER "$FLAGS"
+fi
 
 EXIT_CODE=$?
 
